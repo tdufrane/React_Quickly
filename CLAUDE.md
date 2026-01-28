@@ -9,8 +9,8 @@ Source code examples for **React Quickly, 2nd Edition** (Manning Publications). 
 ## Repository Structure
 
 - **ch01/**: Plain HTML with React via CDN (no build tooling)
-- **ch02/ - ch13/**: CRA-based projects using React 18.2, each subfolder (e.g., `ch04/rq04-state`) is an independent app
-- **ch02p/ - ch08p/**: Practice/extended versions using React 19.2
+- **ch02/ - ch13/**: CRA-based projects using React 18.2, subfolders follow `rq##-name` convention (e.g., `ch04/rq04-state`)
+- **ch02p/ - ch09p/**: Practice/extended versions using React 19.2
 - **publisher/**: Node utility for publishing chapter templates to npm as CRA templates
 
 ## Build & Development Commands
@@ -40,3 +40,13 @@ Chapter 1 (`ch01/hello-world/`) has no build step — open `index.html` directly
 - Functional components with hooks throughout (no class components)
 - Each project is self-contained with its own `package.json` and `node_modules`
 - Entry point is always `src/index.js` rendering into `public/index.html`
+
+## Publisher Tool
+
+To publish chapter projects as Create React App templates to npm:
+
+```bash
+cd publisher
+npm install
+node index.js    # Publishes all ch*/rq* projects as cra-template-* packages
+```

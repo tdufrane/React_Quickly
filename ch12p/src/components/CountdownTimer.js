@@ -8,14 +8,6 @@ const formatTime = (seconds) => {
   return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 };
 
-// Styles extracted to avoid recreation on each render
-const styles = {
-  container: { border: "1px solid #ccc", padding: "20px", margin: "10px" },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  display: { fontSize: "3rem", margin: "20px 0" },
-  complete: { color: "green", fontSize: "1.5rem" },
-};
-
 const CountdownTimer = memo(function CountdownTimer({ id, onRemove }) {
   const [inputSeconds, setInputSeconds] = useState(60);
   const { timeLeft, isRunning, isComplete, start, pause, reset } =
@@ -34,34 +26,84 @@ const CountdownTimer = memo(function CountdownTimer({ id, onRemove }) {
   const handleReset = useCallback(() => reset(inputSeconds), [reset, inputSeconds]);
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2>Timer {id}</h2>
-        <button onClick={handleRemove}>Remove</button>
-      </div>
+    <article className="timer" aria-labelledby={`timer-heading-${id}`}>
+      <header className="timer-header">
+        <h2 id={`timer-heading-${id}`}>Timer {id}</h2>
+        <button
+          type="button"
+          className="timer-remove-button"
+          onClick={handleRemove}
+          aria-label={`Remove Timer ${id}`}
+        >
+          Remove
+        </button>
+      </header>
       <div>
-        <input
-          type="number"
-          value={inputSeconds}
-          onChange={handleInputChange}
-          min="1"
-          disabled={isRunning}
-        />
-        <span> seconds</span>
+        <label htmlFor={`timer-seconds-${id}`}>
+          Duration in seconds:
+          <input
+            id={`timer-seconds-${id}`}
+            name={`timer-seconds-${id}`}
+            type="number"
+            value={inputSeconds}
+            onChange={handleInputChange}
+            min="1"
+            disabled={isRunning}
+            className="timer-input"
+            aria-describedby={`timer-display-${id}`}
+          />
+        </label>
       </div>
-      <div style={styles.display}>{formatTime(timeLeft)}</div>
-      {isComplete && <div style={styles.complete}>Time's up!</div>}
-      <div>
+      <div
+        id={`timer-display-${id}`}
+        className="timer-display"
+        role="timer"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <span className="visually-hidden">Time remaining: </span>
+        {formatTime(timeLeft)}
+      </div>
+      {isComplete && (
+        <div
+          className="timer-complete"
+          role="alert"
+          aria-live="assertive"
+        >
+          Time's up!
+        </div>
+      )}
+      <div role="group" aria-label={`Controls for Timer ${id}`}>
         {!isRunning ? (
-          <button onClick={start} disabled={timeLeft === 0}>
+          <button
+            type="button"
+            className="timer-button"
+            onClick={start}
+            disabled={timeLeft === 0}
+            aria-label={`Start Timer ${id}`}
+          >
             Start
           </button>
         ) : (
-          <button onClick={pause}>Pause</button>
+          <button
+            type="button"
+            className="timer-button"
+            onClick={pause}
+            aria-label={`Pause Timer ${id}`}
+          >
+            Pause
+          </button>
         )}
-        <button onClick={handleReset}>Reset</button>
+        <button
+          type="button"
+          className="timer-button"
+          onClick={handleReset}
+          aria-label={`Reset Timer ${id}`}
+        >
+          Reset
+        </button>
       </div>
-    </div>
+    </article>
   );
 });
 

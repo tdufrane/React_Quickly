@@ -1,136 +1,26 @@
-# Countdown Timer Implementation
+# Countdown Timer Application
 
 ## Overview
-Multiple independent countdown timers. Each timer has its own controls and runs independently. Users can add and remove timers dynamically.
+A fully accessible, performant countdown timer application built with React. Supports multiple independent timers with a modern purple theme.
 
-## Files to Create
+## Project Structure
 
-### 1. `src/components/CountdownTimer.js`
-Main timer component with:
-- Input field for seconds
-- Start/Pause/Reset buttons
-- Display showing remaining time (MM:SS format)
-- "Time's up!" message when complete
-
-### 2. `src/hooks/useCountdown.js`
-Custom hook managing timer logic:
-- `timeLeft` state (seconds remaining)
-- `isRunning` state
-- `start()`, `pause()`, `reset()` functions
-- `useEffect` with `setInterval` for countdown
-- Cleanup on unmount
-
-## Files to Modify
-
-### 3. `src/App.js`
-- Import and render `CountdownTimer` component
-
-## Implementation Details
-
-### useCountdown Hook
-```jsx
-import { useState, useEffect } from "react";
-
-function useCountdown(initialSeconds) {
-  const [timeLeft, setTimeLeft] = useState(initialSeconds);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-
-  useEffect(() => {
-    if (!isRunning || timeLeft <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          setIsRunning(false);
-          setIsComplete(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
-
-  const start = () => setIsRunning(true);
-  const pause = () => setIsRunning(false);
-  const reset = (seconds) => {
-    setTimeLeft(seconds);
-    setIsRunning(false);
-    setIsComplete(false);
-  };
-
-  return { timeLeft, isRunning, isComplete, start, pause, reset };
-}
-
-export default useCountdown;
 ```
-
-### CountdownTimer Component
-Props:
-- `id` - Unique timer identifier
-- `onRemove` - Callback to remove this timer
-
-```jsx
-import { useState } from "react";
-import useCountdown from "../hooks/useCountdown";
-
-function CountdownTimer({ id, onRemove }) {
-  const [inputSeconds, setInputSeconds] = useState(60);
-  const { timeLeft, isRunning, isComplete, start, pause, reset } = useCountdown(inputSeconds);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  return (
-    <div style={{ border: "1px solid #ccc", padding: "20px", margin: "10px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2>Timer {id}</h2>
-        <button onClick={() => onRemove(id)}>Remove</button>
-      </div>
-      {/* Input, display, and controls */}
-    </div>
-  );
-}
-
-export default CountdownTimer;
-```
-
-### App.js - Multiple Timer Management
-```jsx
-import { useState } from "react";
-import CountdownTimer from "./components/CountdownTimer";
-
-function App() {
-  const [timers, setTimers] = useState([{ id: 1 }]);
-  const [nextId, setNextId] = useState(2);
-
-  const addTimer = () => {
-    setTimers([...timers, { id: nextId }]);
-    setNextId(nextId + 1);
-  };
-
-  const removeTimer = (id) => {
-    setTimers(timers.filter((t) => t.id !== id));
-  };
-
-  return (
-    <div className="App">
-      <h1>Countdown Timers</h1>
-      <button onClick={addTimer}>+ Add Timer</button>
-      {timers.map((timer) => (
-        <CountdownTimer key={timer.id} id={timer.id} onRemove={removeTimer} />
-      ))}
-    </div>
-  );
-}
+ch12p/
+├── src/
+│   ├── components/
+│   │   └── CountdownTimer.js   # Timer component with accessibility
+│   ├── hooks/
+│   │   └── useCountdown.js     # Custom countdown hook
+│   ├── App.js                  # Main app with timer management
+│   └── index.css               # All styles (purple theme)
+└── docs/
+    └── countdown-timer.md      # This documentation
 ```
 
 ## Features
+
+### Core Functionality
 - Add unlimited timers with "+ Add Timer" button
 - Each timer runs independently
 - Remove individual timers without affecting others
@@ -138,6 +28,15 @@ function App() {
 - Start/Pause/Reset controls per timer
 - "Time's up!" message when complete
 - Input changes immediately reflect in timer display
+- Empty state message when no timers exist
+
+### Styling
+- Purple theme (`#6b21a8` background, `#7c3aed` timer containers)
+- White text for contrast
+- Rounded corners and modern UI
+- Hover states on all interactive elements
+- Disabled button styling
+- All styles in external CSS (no inline styles)
 
 ## Performance Optimizations
 
@@ -145,20 +44,103 @@ function App() {
 - `useRef` for interval reference (avoids stale closures)
 - `useCallback` for memoized `start`, `pause`, `reset` functions
 - Removed `timeLeft` from useEffect dependencies (uses functional updates)
+- Proper cleanup on unmount
 
 ### CountdownTimer Component
 - `React.memo` wrapper prevents unnecessary re-renders
 - `formatTime` moved outside component (pure function)
-- Styles extracted as constants (avoids object recreation)
-- `useCallback` for event handlers
+- `useCallback` for all event handlers (`handleInputChange`, `handleRemove`, `handleReset`)
 
 ### App.js
 - `useCallback` for `addTimer` and `removeTimer`
 - Functional state updates for proper batching
 
+## W3C/WCAG Accessibility Compliance
+
+### Semantic HTML
+- `<article>` for each timer container
+- `<header>` for timer and app headers
+- `<main>` landmark for main content
+- `<section>` for timers list
+
+### ARIA Attributes
+- `aria-labelledby` on timer articles linking to headings
+- `aria-label` on all buttons for screen reader context
+- `role="timer"` with `aria-live="polite"` for time display
+- `role="alert"` with `aria-live="assertive"` for completion message
+- `aria-describedby` linking input to timer display
+- `role="group"` for button controls
+
+### Form Accessibility
+- Proper `<label>` elements with `htmlFor` attribute
+- Unique `id` and `name` attributes on inputs
+- `type="button"` on all buttons
+
+### Keyboard Navigation
+- Skip link to main content
+- Visible focus indicators (3px yellow outline)
+- All interactive elements keyboard accessible
+
+### Screen Reader Support
+- `.visually-hidden` class for screen reader only text
+- "Time remaining:" prefix for timer display
+- Descriptive button labels (e.g., "Start Timer 1", "Remove Timer 2")
+
+## CSS Classes
+
+| Class | Description |
+|-------|-------------|
+| `.App` | Main application container |
+| `.timer` | Timer article container |
+| `.timer-header` | Timer header with title and remove button |
+| `.timer-display` | Large time display (MM:SS) |
+| `.timer-complete` | "Time's up!" message |
+| `.timer-input` | Seconds input field |
+| `.timer-button` | Start/Pause/Reset buttons |
+| `.timer-remove-button` | Red remove button |
+| `.visually-hidden` | Screen reader only content |
+| `.skip-link` | Skip to main content link |
+
+## Hook API
+
+### useCountdown(initialSeconds)
+
+**Parameters:**
+- `initialSeconds` - Initial countdown value in seconds
+
+**Returns:**
+| Property | Type | Description |
+|----------|------|-------------|
+| `timeLeft` | number | Seconds remaining |
+| `isRunning` | boolean | Timer is active |
+| `isComplete` | boolean | Timer reached zero |
+| `start()` | function | Start the countdown |
+| `pause()` | function | Pause the countdown |
+| `reset(seconds)` | function | Reset to specified seconds |
+
+## Component Props
+
+### CountdownTimer
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `id` | number | Unique timer identifier |
+| `onRemove` | function | Callback when remove is clicked |
+
 ## Verification
+
 1. Run `npm start` in ch12p
 2. Click "Add Timer" - new timer appears
 3. Start multiple timers - each runs independently
-4. Click Remove on a timer - only that timer is removed
-5. Other timers continue running unaffected
+4. Change input value - timer display updates immediately
+5. Click Pause - timer stops
+6. Click Reset - timer resets to input value
+7. Timer reaches 0 - shows "Time's up!"
+8. Click Remove - only that timer is removed
+9. Remove all timers - empty state message appears
+
+### Accessibility Testing
+1. Tab through all elements - focus visible on each
+2. Press Tab on page load - skip link appears
+3. Use screen reader - all elements properly announced
+4. Check color contrast - meets WCAG AA standards

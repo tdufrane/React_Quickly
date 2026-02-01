@@ -5,9 +5,144 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #6b21a8;
+  color: white;
+  min-height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.App {
+  padding: 20px;
+}
+
+.App h1 {
+  margin-top: 0;
+}
+
+.App > button {
+  background-color: #9333ea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.App > button:hover {
+  background-color: #a855f7;
+}
+
+/* Timer Container */
+.timer {
+  background-color: #7c3aed;
+  border: 2px solid #a855f7;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
+  color: white;
+}
+
+.timer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.timer-header h2 {
+  margin: 0;
+}
+
+.timer-display {
+  font-size: 3rem;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.timer-complete {
+  color: #86efac;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.timer-input {
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  width: 80px;
+}
+
+.timer-button {
+  background-color: #9333ea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.timer-button:hover {
+  background-color: #a855f7;
+}
+
+.timer-button:disabled {
+  background-color: #6b7280;
+  cursor: not-allowed;
+}
+
+.timer-remove-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.timer-remove-button:hover {
+  background-color: #ef4444;
+}
+
+/* Accessibility - Screen reader only content */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles for keyboard navigation */
+.timer-button:focus,
+.timer-remove-button:focus,
+.timer-input:focus {
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
 }

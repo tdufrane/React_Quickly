@@ -17,13 +17,31 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Countdown Timers</h1>
-      <button onClick={addTimer} style={{ marginBottom: "20px" }}>
-        + Add Timer
-      </button>
-      {timers.map((timer) => (
-        <CountdownTimer key={timer.id} id={timer.id} onRemove={removeTimer} />
-      ))}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <header>
+        <h1>Countdown Timers</h1>
+      </header>
+      <main id="main-content">
+        <button
+          type="button"
+          onClick={addTimer}
+          style={{ marginBottom: "20px" }}
+          aria-label="Add a new countdown timer"
+        >
+          + Add Timer
+        </button>
+        <section aria-label="Active timers">
+          {timers.length === 0 ? (
+            <p>No timers. Click "Add Timer" to create one.</p>
+          ) : (
+            timers.map((timer) => (
+              <CountdownTimer key={timer.id} id={timer.id} onRemove={removeTimer} />
+            ))
+          )}
+        </section>
+      </main>
     </div>
   );
 }

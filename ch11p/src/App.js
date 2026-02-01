@@ -1,28 +1,33 @@
-import Context from "./Context";
+import { useState } from "react";
+import MenuContext from "./Context";
+import AuthContext from "./AuthContext";
 import Menu from "./Menu";
 import Main from "./Main";
 import Footer from "./Footer";
+import useLinks from "./hooks/useLinks";
 import "./style.css";
 
 function App() {
-  const links = [
-    { title: "Home", href: "/", icon: "home" },
-    { title: "Services", href: "/services", icon: "services" },
-    { title: "Pricing", href: "/pricing", icon: "pricing" },
-    { title: "Blog", href: "/blog", icon: "blog" },
-  ];
+  const { links, loading, error } = useLinks();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <Context.Provider value={links}>
-      <header>
-        <Menu />
-      </header>
-      <main>
-        <Main />
-      </main>
-      <footer>
-        <Footer />
-      </footer>
-    </Context.Provider>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+      <MenuContext.Provider value={links}>
+        <header>
+          <Menu />
+        </header>
+        <main>
+          <Main />
+        </main>
+        <footer>
+          <Footer />
+        </footer>
+      </MenuContext.Provider>
+    </AuthContext.Provider>
   );
 }
 

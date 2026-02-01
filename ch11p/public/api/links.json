@@ -1,0 +1,8 @@
+{
+  "links": [
+    { "title": "Home", "href": "/", "icon": "home" },
+    { "title": "Services", "href": "/services", "icon": "services" },
+    { "title": "Pricing", "href": "/pricing", "icon": "pricing" },
+    { "title": "Blog", "href": "/blog", "icon": "blog" }
+  ]
+}

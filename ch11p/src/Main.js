@@ -1,4 +1,18 @@
+import useAuth from "./hooks/useAuth";
+
 function Main() {
-  return <h1>Welcome to this website</h1>;
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
+
+  return (
+    <>
+      <h1>{isLoggedIn ? "Welcome back!" : "Welcome, please log in"}</h1>
+      {isLoggedIn ? (
+        <button onClick={() => setIsLoggedIn(false)}>Logout</button>
+      ) : (
+        <button onClick={() => setIsLoggedIn(true)}>Login</button>
+      )}
+    </>
+  );
 }
+
 export default Main;

@@ -1,8 +1,12 @@
 import { useContext } from "react";
 import Context from "./Context";
 import MenuItem from "./MenuItem";
+import useAuth from "./hooks/useAuth";
+
 function Menu() {
   const links = useContext(Context);
+  const { isLoggedIn } = useAuth();
+
   return (
     <nav>
       <ul className="menu">
@@ -11,6 +15,11 @@ function Menu() {
             {title}
           </MenuItem>
         ))}
+        {isLoggedIn && (
+          <MenuItem href="/profile" icon="profile">
+            Profile
+          </MenuItem>
+        )}
       </ul>
     </nav>
   );
